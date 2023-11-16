@@ -27,7 +27,8 @@ __all__ = [
     "latex_delimiters_set",
     "hide_history_when_not_logged_in",
     "default_chuanhu_assistant_model",
-    "show_api_billing"
+    "show_api_billing",
+    "chat_name_method_index",
 ]
 
 # 添加一个统一的config文件，避免文件过多造成的疑惑（优先级最低）
@@ -45,15 +46,12 @@ def load_config_to_environ(key_list):
         if key in config:
             os.environ[key.upper()] = os.environ.get(key.upper(), config[key])
 
-
-lang_config = config.get("language", "auto")
-language = os.environ.get("LANGUAGE", lang_config)
-
 hide_history_when_not_logged_in = config.get(
     "hide_history_when_not_logged_in", False)
 check_update = config.get("check_update", True)
 show_api_billing = config.get("show_api_billing", False)
 show_api_billing = bool(os.environ.get("SHOW_API_BILLING", show_api_billing))
+chat_name_method_index = config.get("chat_name_method_index", 2)
 
 if os.path.exists("api_key.txt"):
     logging.info("检测到api_key.txt文件，正在进行迁移...")
@@ -96,6 +94,10 @@ else:
     sensitive_id = config.get("sensitive_id", "")
     sensitive_id = os.environ.get("SENSITIVE_ID", sensitive_id)
 
+if "available_models" in config:
+    presets.MODELS = config["available_models"]
+    logging.info(f"已设置可用模型：{config['available_models']}")
+
 # 模型配置
 if "extra_models" in  config:
     presets.MODELS.extend(config["extra_models"])
@@ -122,6 +124,16 @@ midjourney_discord_proxy_url = config.get("midjourney_discord_proxy_url", "")
 os.environ["MIDJOURNEY_DISCORD_PROXY_URL"] = midjourney_discord_proxy_url
 midjourney_temp_folder = config.get("midjourney_temp_folder", "")
 os.environ["MIDJOURNEY_TEMP_FOLDER"] = midjourney_temp_folder
+
+spark_api_key = config.get("spark_api_key", "")
+os.environ["SPARK_API_KEY"] = spark_api_key
+spark_appid = config.get("spark_appid", "")
+os.environ["SPARK_APPID"] = spark_appid
+spark_api_secret = config.get("spark_api_secret", "")
+os.environ["SPARK_API_SECRET"] = spark_api_secret
+
+claude_api_secret = config.get("claude_api_secret", "")
+os.environ["CLAUDE_API_SECRET"] = claude_api_secret
 
 load_config_to_environ(["openai_api_type", "azure_openai_api_key", "azure_openai_api_base_url",
                        "azure_openai_api_version", "azure_deployment_name", "azure_embedding_deployment_name", "azure_embedding_model_name"])
@@ -278,3 +290,11 @@ share = config.get("share", False)
 # avatar
 bot_avatar = config.get("bot_avatar", "default")
 user_avatar = config.get("user_avatar", "default")
+if bot_avatar == "" or bot_avatar == "none" or bot_avatar is None:
+    bot_avatar = None
+elif bot_avatar == "default":
+    bot_avatar = "web_assets/chatbot.png"
+if user_avatar == "" or user_avatar == "none" or user_avatar is None:
+    user_avatar = None
+elif user_avatar == "default":
+    user_avatar = "web_assets/user.png"

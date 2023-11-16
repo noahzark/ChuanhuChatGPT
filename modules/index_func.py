@@ -23,6 +23,7 @@ def get_documents(file_src):
         filename = os.path.basename(filepath)
         file_type = os.path.splitext(filename)[1]
         logging.info(f"loading file: {filename}")
+        texts = None
         try:
             if file_type == ".pdf":
                 logging.debug("Loading PDF...")
@@ -72,8 +73,9 @@ def get_documents(file_src):
             logging.error(f"Error loading file: {filename}")
             traceback.print_exc()
 
-        texts = text_splitter.split_documents(texts)
-        documents.extend(texts)
+        if texts is not None:
+            texts = text_splitter.split_documents(texts)
+            documents.extend(texts)
     logging.debug("Documents loaded.")
     return documents
 
@@ -87,6 +89,7 @@ def construct_index(
     chunk_size_limit=600,
     embedding_limit=None,
     separator=" ",
+    load_from_cache_if_possible=True,
 ):
     from langchain.chat_models import ChatOpenAI
     from langchain.vectorstores import FAISS
@@ -114,7 +117,7 @@ def construct_index(
         else:
             embeddings = OpenAIEmbeddings(deployment=os.environ["AZURE_EMBEDDING_DEPLOYMENT_NAME"], openai_api_key=os.environ["AZURE_OPENAI_API_KEY"],
                                           model=os.environ["AZURE_EMBEDDING_MODEL_NAME"], openai_api_base=os.environ["AZURE_OPENAI_API_BASE_URL"], openai_api_type="azure")
-    if os.path.exists(index_path):
+    if os.path.exists(index_path) and load_from_cache_if_possible:
         logging.info("找到了缓存的索引文件，加载中……")
         return FAISS.load_local(index_path, embeddings)
     else:

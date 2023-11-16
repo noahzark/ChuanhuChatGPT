@@ -11,6 +11,10 @@
     "midjourney_proxy_api_secret": "", // 你的 MidJourney Proxy API Secret，用于鉴权访问 api，可选
     "midjourney_discord_proxy_url": "", // 你的 MidJourney Discord Proxy URL，用于对生成对图进行反代，可选
     "midjourney_temp_folder": "./tmp", // 你的 MidJourney 临时文件夹，用于存放生成的图片，填空则关闭自动下载切图（直接显示MJ的四宫格图）
+    "spark_appid": "", // 你的 讯飞星火大模型 API AppID，用于讯飞星火大模型对话模型
+    "spark_api_key": "", // 你的 讯飞星火大模型 API Key，用于讯飞星火大模型对话模型
+    "spark_api_secret": "", // 你的 讯飞星火大模型 API Secret，用于讯飞星火大模型对话模型
+    "claude_api_secret":"",// 你的 Claude API Secret，用于 Claude 对话模型
 
 
     //== Azure ==
@@ -23,14 +27,15 @@
     "azure_embedding_model_name": "text-embedding-ada-002", // 你的 Azure OpenAI Embedding 模型名称
 
     //== 基础配置 ==
-    "language": "auto", // 界面语言，可选"auto", "zh-CN", "en-US", "ja-JP", "ko-KR", "sv-SE"
+    "language": "auto", // 界面语言，可选"auto", "zh_CN", "en_US", "ja_JP", "ko_KR", "sv_SE", "ru_RU", "vi_VN"
     "users": [], // 用户列表，[[用户名1, 密码1], [用户名2, 密码2], ...]
     "local_embedding": false, //是否在本地编制索引
     "hide_history_when_not_logged_in": false, //未登录情况下是否不展示对话历史
     "check_update": true, //是否启用检查更新
     "default_model": "gpt-3.5-turbo", // 默认模型
-    "bot_avatar": "default", // 机器人头像，可填写图片链接、Data URL (base64)，或者"none"（不显示头像）
-    "user_avatar": "default", // 用户头像，可填写图片链接、Data URL (base64)，或者"none"（不显示头像）
+    "chat_name_method_index": 2, // 选择对话名称的方法。0: 使用日期时间命名；1: 使用第一条提问命名，2: 使用模型自动总结
+    "bot_avatar": "default", // 机器人头像，可填写本地或网络图片链接，或者"none"（不显示头像）
+    "user_avatar": "default", // 用户头像，可填写本地或网络图片链接，或者"none"（不显示头像）
 
     //== API 用量 ==
     "show_api_billing": false, //是否显示OpenAI API用量（启用需要填写sensitive_id）
@@ -57,11 +62,13 @@
     //== 高级配置 ==
     // 是否多个API Key轮换使用
     "multi_api_key": false,
-    "api_key_list": [
-        "sk-xxxxxxxxxxxxxxxxxxxxxxxx1",
-        "sk-xxxxxxxxxxxxxxxxxxxxxxxx2",
-        "sk-xxxxxxxxxxxxxxxxxxxxxxxx3"
-    ],
+    // "available_models": ["GPT3.5 Turbo", "GPT4 Turbo", "GPT4 Vision"], // 可用的模型列表，将覆盖默认的可用模型列表
+    // "extra_models": ["模型名称3", "模型名称4", ...], // 额外的模型，将添加到可用的模型列表之后
+    // "api_key_list": [
+    //     "sk-xxxxxxxxxxxxxxxxxxxxxxxx1",
+    //     "sk-xxxxxxxxxxxxxxxxxxxxxxxx2",
+    //     "sk-xxxxxxxxxxxxxxxxxxxxxxxx3"
+    // ],
     // 自定义OpenAI API Base
     // "openai_api_base": "https://api.openai.com",
     // 自定义使用代理（请替换代理URL）
